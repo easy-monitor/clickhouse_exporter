@@ -17,7 +17,7 @@ _go_proj_path="$_go_proj_domain/clickhouse_exporter"
 
 prepare() {
     export _projdir=$(readlink -f "$startdir/../..")
-    mkdir -p "$startdir/gopath/src/$_go_proj_path"
+    mkdir -p "$startdir/gopath/src/$_go_proj_domain"
     ln -snf "$_projdir" "startdir/gopath/src/$_go_proj_path"
     
     eval "$(GIMME_GO_VERSION=$_goversion gimme)"
