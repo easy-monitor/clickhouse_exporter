@@ -1,0 +1,26 @@
+dependencies: null
+install_postscript: ''
+install_prescript: ''
+port_guard: stopStart
+port_list:
+- port: 9116
+  type: tcp
+proc_guard: stopStart
+proc_list:
+- pid_file: null
+  proc_name: clickhouse_exporter
+  proc_num_max: null
+  proc_num_min: null
+restart_script: ''
+rollback_postscript: ''
+rollback_prescript: ''
+service_list:
+- host: null
+  name: logic.clickhouse_exporter
+  port: 9116
+start_dependencies: []
+start_script: ''
+stop_script: ''
+update_postscript: ''
+update_prescript: ''
+user: easyops:easyops
