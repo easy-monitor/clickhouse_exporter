@@ -1,0 +1,7 @@
+module:
+  - name: clickhouse01
+    user: easyops
+    password: pgf7kKoG
+  - name: clickhouse02
+    user: easyops
+    password: easyops
