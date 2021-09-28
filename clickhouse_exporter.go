@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -19,7 +20,7 @@ import (
 var (
 	listeningAddress    = flag.String("telemetry.address", ":9116", "Address on which to expose metrics.")
 	metricsEndpoint     = flag.String("telemetry.endpoint", "/metrics", "Path under which to expose metrics.")
-	clickhouseScrapeURI = flag.String("scrape_uri", "http://192.168.10.144:9880/", "URI to clickhouse http endpoint")
+	clickhouseScrapeURI = flag.String("scrape_uri", "http://localhost:8123/", "URI to clickhouse http endpoint")
 	clickhouseOnly      = flag.Bool("clickhouse_only", true, "Expose only Clickhouse metrics, not metrics from the exporter itself")
 	insecure            = flag.Bool("insecure", true, "Ignore server certificate if using https")
 	user                = os.Getenv("CLICKHOUSE_USER")
@@ -77,6 +78,8 @@ func handler() func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(buf))
 			return
 		}
+
+		*clickhouseScrapeURI = fmt.Sprintf("http://%v", target)
 
 		uri, err := url.Parse(*clickhouseScrapeURI)
 		if err != nil {
