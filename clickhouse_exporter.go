@@ -49,7 +49,9 @@ func handler() func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
 		target := query.Get("target")
 		module := query.Get("module")
-		conf, _ := loadConfig()
+
+		var user string
+		var password string
 
 		if target == "" {
 			buf := "uri error, not found target"
@@ -58,25 +60,33 @@ func handler() func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if module == "" {
-			buf := "uri error, not found module"
-			w.Write([]byte(buf))
-			return
-		}
+			user = query.Get("user")
 
-		var user string
-		var password string
-		var isBreak bool
-		for i:=0; i < len(conf.Modules); i++ {
-			if conf.Modules[i].Name == module {
-				user = conf.Modules[i].User
-				password = conf.Modules[i].Password
-				isBreak = true
+			if user == "" {
+				buf := "uri error, not found user"
+				w.Write([]byte(buf))
+				return
 			}
-		}
-		if ! isBreak {
-			buf := "not found module in conf.yml"
-			w.Write([]byte(buf))
-			return
+
+			password = query.Get("password")
+		} else {
+			conf, _ := loadConfig()
+
+			var isBreak bool
+
+			for i := 0; i < len(conf.Modules); i++ {
+				if conf.Modules[i].Name == module {
+					user = conf.Modules[i].User
+					password = conf.Modules[i].Password
+					isBreak = true
+				}
+			}
+
+			if !isBreak {
+				buf := "not found module in conf.yml"
+				w.Write([]byte(buf))
+				return
+			}
 		}
 
 		*clickhouseScrapeURI = fmt.Sprintf("http://%v", target)
